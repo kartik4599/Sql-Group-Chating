@@ -3,13 +3,53 @@ import {
   FormControl,
   FormLabel,
   Input,
-  InputGroup,
-  InputRightElement,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 const SignupComponent = () => {
+  const [loading, setLoading] = useState();
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [phone, setPhone] = useState();
+  const [password, setPassword] = useState();
+  const toast = useToast();
+
+  const submitHandler = async () => {
+    console.table({ name, email, phone, password });
+    setLoading(true);
+    try {
+      const { data } = await axios.post("/api/auth/signup", {
+        name,
+        email,
+        phoneNo: phone,
+        password,
+      });
+
+      if (data) {
+        console.log(data);
+        toast({
+          status: "success",
+          position: "top",
+          title: "Account Created Succesfully",
+          isClosable: true,
+          duration: 5000,
+        });
+      }
+    } catch (e) {
+      console.log(e);
+      toast({
+        status: "error",
+        position: "top",
+        title: "Error Occured",
+        isClosable: true,
+        duration: 5000,
+      });
+    }
+    setLoading(false);
+  };
   return (
     <VStack spacing={"5px"}>
       <FormControl id="first-name" isRequired>
@@ -17,7 +57,7 @@ const SignupComponent = () => {
         <Input
           placeContent={"Enter Your Name"}
           onChange={(e) => {
-            //   setName(e.target.value);
+            setName(e.target.value);
           }}></Input>
       </FormControl>
       <FormControl id="email" isRequired>
@@ -26,7 +66,7 @@ const SignupComponent = () => {
           type="email"
           placeContent={"Enter Your Email"}
           onChange={(e) => {
-            //   setEmail(e.target.value);
+            setEmail(e.target.value);
           }}
         />
       </FormControl>
@@ -36,48 +76,26 @@ const SignupComponent = () => {
           type="tel"
           placeContent={"Enter Your Phone No"}
           onChange={(e) => {
-            //   setEmail(e.target.value);
+            setPhone(e.target.value);
           }}
         />
       </FormControl>
       <FormControl id="password" isRequired>
         <FormLabel>Password</FormLabel>
         <Input
-          //   type={show ? "" : "password"}
+          type={"password"}
           placeContent={"Enter Your Password"}
           onChange={(e) => {
-            // setPassword(e.target.value);
+            setPassword(e.target.value);
           }}
         />
       </FormControl>
-      <FormControl id="confpassword" isRequired>
-        <FormLabel>Conform Password</FormLabel>
-        <Input
-          //   type={show ? "text" : "password"}
-          placeContent={"Enter Your Password"}
-          onChange={(e) => {
-            // setConfPassword(e.target.value);
-          }}
-        />
-      </FormControl>
-      {/* <FormControl id="pic">
-        <FormLabel>Add Your Picture</FormLabel>
-        <Input
-          type="File"
-          accept="image/*"
-          placeContent={"Enter Your Email"}
-          onChange={(e) => {
-            //   postDetails(e.target.files[0]);
-          }}
-        />
-      </FormControl> */}
       <Button
         colorScheme="yellow"
         width={"100%"}
         style={{ marginTop: 15 }}
-        //   isLoading={loading}
-        //   onClick={submitHandler}
-      >
+        isLoading={loading}
+        onClick={submitHandler}>
         Sign Up
       </Button>
     </VStack>
