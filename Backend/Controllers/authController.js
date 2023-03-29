@@ -1,6 +1,7 @@
 const User = require("../Model/userModel");
 const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
+const { genrateToken } = require("../Utils/function");
 require("colors");
 
 exports.signup = async (req, res) => {
@@ -50,12 +51,14 @@ exports.login = async (req, res) => {
     });
 
     currentUser = JSON.parse(JSON.stringify(currentUser));
-    console.log(currentUser);
+
     if (currentUser.length > 0) {
       const result = await bcrypt.compare(password, currentUser[0].password);
       console.log(`${result}`.bgCyan);
       if (result) {
-        res.status(200).json({ msg: "Success", user: currentUser });
+        const jwt = genrateToken({ id: currentUser[0].id });
+
+        res.status(200).json({ msg: "Success", user: currentUser, jwt });
       } else {
         res.status(200).json({ msg: "Wrong Password" });
       }

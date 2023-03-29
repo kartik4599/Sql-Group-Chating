@@ -26,6 +26,7 @@ const LoginComponent = () => {
       });
 
       if (data.msg === "Success") {
+        console.table(data);
         toast({
           status: "success",
           position: "top",
@@ -33,6 +34,7 @@ const LoginComponent = () => {
           isClosable: true,
           duration: 5000,
         });
+        localStorage.setItem("user",data.jwt);
       } else {
         toast({
           status: "warning",
