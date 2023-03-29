@@ -1,10 +1,13 @@
 const express = require("express");
 const authRouters = require("./Routes/authRoutes");
 const DataBase = require("./Utils/database");
-// const bodyParser = require("");
+const cors = require("cors");
 require("colors");
 const app = express();
 
+app.use(cors(
+  
+));
 app.use(express.json());
 
 app.use("/api/auth", authRouters);

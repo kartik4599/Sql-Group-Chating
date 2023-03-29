@@ -28,12 +28,19 @@ const SignupComponent = () => {
         password,
       });
 
-      if (data) {
-        console.log(data);
+      if (data.msg === "Success") {
         toast({
           status: "success",
           position: "top",
           title: "Account Created Succesfully",
+          isClosable: true,
+          duration: 5000,
+        });
+      } else if (data.msg === "User allready exist") {
+        toast({
+          status: "warning",
+          position: "top",
+          title: "User Allready exist",
           isClosable: true,
           duration: 5000,
         });
