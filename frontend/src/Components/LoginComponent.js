@@ -7,12 +7,14 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { ChatContext } from "../Context/chatContext";
 
 const LoginComponent = () => {
   const [loading, setLoading] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const cxt = useContext(ChatContext);
 
   const toast = useToast();
 
@@ -26,7 +28,6 @@ const LoginComponent = () => {
       });
 
       if (data.msg === "Success") {
-        console.table(data);
         toast({
           status: "success",
           position: "top",
@@ -34,7 +35,8 @@ const LoginComponent = () => {
           isClosable: true,
           duration: 5000,
         });
-        localStorage.setItem("user",data.jwt);
+        localStorage.setItem("user", data.jwt);
+        cxt.setLogin(true);
       } else {
         toast({
           status: "warning",

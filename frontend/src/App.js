@@ -1,11 +1,16 @@
-
-import './App.css';
-import Login from './Pages/Login';
+import { useContext } from "react";
+import "./App.css";
+import { ChatContext } from "./Context/chatContext";
+import ChatPage from "./Pages/ChatPage";
+import Login from "./Pages/Login";
 
 function App() {
+  const cxt = useContext(ChatContext);
+
   return (
     <div className="App">
-      <Login/>
+      {!cxt.isLogin && <Login />}
+      {cxt.isLogin && <ChatPage />}
     </div>
   );
 }
