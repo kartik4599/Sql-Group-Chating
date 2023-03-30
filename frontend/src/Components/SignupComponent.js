@@ -63,6 +63,8 @@ const SignupComponent = () => {
         <FormLabel>Name</FormLabel>
         <Input
           placeContent={"Enter Your Name"}
+          bgColor={"blackAlpha.500"}
+          color="white"
           onChange={(e) => {
             setName(e.target.value);
           }}></Input>
@@ -71,6 +73,8 @@ const SignupComponent = () => {
         <FormLabel>Email</FormLabel>
         <Input
           type="email"
+          bgColor={"blackAlpha.500"}
+          color="white"
           placeContent={"Enter Your Email"}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -82,6 +86,8 @@ const SignupComponent = () => {
         <Input
           type="tel"
           placeContent={"Enter Your Phone No"}
+          bgColor={"blackAlpha.500"}
+          color="white"
           onChange={(e) => {
             setPhone(e.target.value);
           }}
@@ -91,6 +97,8 @@ const SignupComponent = () => {
         <FormLabel>Password</FormLabel>
         <Input
           type={"password"}
+          bgColor={"blackAlpha.500"}
+          color="white"
           placeContent={"Enter Your Password"}
           onChange={(e) => {
             setPassword(e.target.value);

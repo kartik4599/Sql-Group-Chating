@@ -8,7 +8,6 @@ import Login from "./Pages/Login";
 function App() {
   const cxt = useContext(ChatContext);
 
-  console.log(cxt);
   return (
     <div className="App">
       <Header />

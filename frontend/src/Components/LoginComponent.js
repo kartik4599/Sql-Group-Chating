@@ -66,6 +66,8 @@ const LoginComponent = () => {
         <FormLabel>Email</FormLabel>
         <Input
           type="email"
+          bgColor={"blackAlpha.500"}
+          color="white"
           placeContent={"Enter Your Email"}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -76,6 +78,8 @@ const LoginComponent = () => {
         <FormLabel>Password</FormLabel>
         <Input
           type={"password"}
+          bgColor={"blackAlpha.500"}
+          color="white"
           placeContent={"Enter Your Password"}
           onChange={(e) => {
             setPassword(e.target.value);

@@ -66,8 +66,9 @@ const ChatPage = () => {
       display={"flex"}
       alignItems="center"
       justifyContent={"center"}
-      h="95vh"
-      w="100vw">
+      h="92vh"
+      w="100%"
+      >
       <Box
         bg="blackAlpha.400"
         borderRadius={"lg"}

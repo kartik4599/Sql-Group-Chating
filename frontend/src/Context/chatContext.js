@@ -54,7 +54,7 @@ const ContextProvider = ({ children }) => {
     if (localStorage.getItem("user")) {
       loginHandler(true, JSON.parse(localStorage.getItem("user")));
     }
-    getChats();
+    setInterval(getChats, 1000);
   }, []);
 
   const [contextState, dispatchContext] = useReducer(
