@@ -54,6 +54,9 @@ const ContextProvider = ({ children }) => {
     if (localStorage.getItem("user")) {
       loginHandler(true, JSON.parse(localStorage.getItem("user")));
     }
+    if (localStorage.getItem("offline")) {
+      chatHandler(JSON.parse(localStorage.getItem("offline")));
+    }
     setInterval(getChats, 1000);
   }, []);
 
@@ -73,6 +76,13 @@ const ContextProvider = ({ children }) => {
       const { data } = await axios.get("/api/chat", config);
       if (data.length > 0) {
         chatHandler(data);
+        let newIndex = 0;
+        if (data.length > 15) newIndex = data.length - 15;
+        let newMsg = [];
+        for (let i = newIndex; i < data.length; i++) {
+          newMsg.push(data[i]);
+        }
+        localStorage.setItem("offline", JSON.stringify(newMsg));
       }
     } catch (e) {
       console.log(e);
