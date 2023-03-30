@@ -35,8 +35,9 @@ const LoginComponent = () => {
           isClosable: true,
           duration: 5000,
         });
-        localStorage.setItem("user", data.jwt);
-        cxt.setLogin(true);
+        const setData = { ...data.user[0], jwt: data.jwt };
+        cxt.setLogin(true, setData);
+        localStorage.setItem("user", JSON.stringify(setData));
       } else {
         toast({
           status: "warning",

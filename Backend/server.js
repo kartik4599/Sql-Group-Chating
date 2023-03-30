@@ -2,15 +2,25 @@ const express = require("express");
 const authRouters = require("./Routes/authRoutes");
 const DataBase = require("./Utils/database");
 const cors = require("cors");
+const chatRouters = require("./Routes/chatRoutes");
+const User = require("./Model/userModel");
+const Chat = require("./Model/chatModel");
 require("colors");
 const app = express();
 
-app.use(cors(
-  
-));
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
 
 app.use("/api/auth", authRouters);
+
+app.use("/api/chat", chatRouters);
+
+User.hasMany(Chat);
+Chat.belongsTo(User);
 
 const runServer = async () => {
   const db = await DataBase.sync();

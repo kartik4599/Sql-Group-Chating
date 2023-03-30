@@ -1,9 +1,20 @@
-import React from "react";
-import { Avatar, Box, Text } from "@chakra-ui/react";
-const SingleChat = () => {
+import React, { useContext } from "react";
+import { Avatar, Box, Text, Tooltip } from "@chakra-ui/react";
+import { ChatContext } from "../Context/chatContext";
+const SingleChat = ({ content, user, userId }) => {
+  const cxt = useContext(ChatContext);
+
   return (
-    <Box display={"flex"} alignItems="center" w="100%" justifyContent={"start"}>
-      <Avatar size={"sm"} name="kartik mendu"></Avatar>
+    <Box
+      display={"flex"}
+      alignItems="center"
+      w="100%"
+      justifyContent={userId === cxt.user.id ? "end" : "start"}>
+      {userId !== cxt.user.id && (
+        <Tooltip label={user.name}>
+          <Avatar size={"sm"} name={user.name}></Avatar>
+        </Tooltip>
+      )}
       <Box
         bgColor={"yellow.300"}
         w={"fit-content"}
@@ -16,7 +27,7 @@ const SingleChat = () => {
           fontFamily={"Delicious Handrawn"}
           fontSize="18px"
           fontWeight={"medium"}>
-          How are you...
+          {content}
         </Text>
       </Box>
     </Box>
