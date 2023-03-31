@@ -68,3 +68,19 @@ exports.login = async (req, res) => {
     res.status(400).json({ msg: "Error occured" });
   }
 };
+
+exports.searchUser = async (req, res) => {
+  try {
+    const { search } = req.query;
+    console.log(search);
+    const resultUser = await User.findAll({
+      where: {
+        name: {
+          [Op.like]: `%${search}%`,
+        },
+      },
+    });
+
+    res.json({ resultUser });
+  } catch (e) {}
+};

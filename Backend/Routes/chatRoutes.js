@@ -5,6 +5,6 @@ const { vertifyUser } = require("../Middleware/verifyUser");
 
 chatRouters.post("/", vertifyUser, chatController.postChat);
 
-chatRouters.get("/", vertifyUser, chatController.getAllChat);
+chatRouters.get("/:groupId", vertifyUser, chatController.getAllChat);
 
 module.exports = chatRouters;

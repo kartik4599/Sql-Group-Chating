@@ -5,15 +5,18 @@ export const ChatContext = createContext({
   isLogin: false,
   setLogin: (action) => {},
   user: {},
-  chats: [],
-  setChats: (chat) => {},
+  group: null,
+  setGroup: (data, action) => {},
+  activeGroup: {},
+  setActiveGroup: (group) => {},
 });
 
 const ContextProvider = ({ children }) => {
   const defaultContext = {
     isLogin: false,
     user: {},
-    chats: [],
+    group: null,
+    activeGroup: null,
   };
 
   const contextReducer = (state, action) => {
@@ -21,7 +24,8 @@ const ContextProvider = ({ children }) => {
       return {
         isLogin: true,
         user: action.user,
-        chats: state.chats,
+        group: state.group,
+        activeGroup: state.activeGroup,
       };
     }
 
@@ -29,24 +33,33 @@ const ContextProvider = ({ children }) => {
       return {
         isLogin: false,
         user: {},
-        chats: [],
+        group: null,
+        activeGroup: null,
       };
     }
-
-    if (action.type === "addChats") {
+    if (action.type === "setGroup") {
       return {
         isLogin: state.isLogin,
         user: state.user,
-        chats: action.data,
+        group: action.data,
+        activeGroup: state.activeGroup,
       };
     }
-    if (action.type === "addSingleChat") {
+    if (action.type === "activeGroup") {
       return {
         isLogin: state.isLogin,
         user: state.user,
-        chats: [...state.chats, action.data],
+        group: state.group,
+        activeGroup: action.data,
       };
     }
+    // if (action.type === "addSingleChat") {
+    //   return {
+    //     isLogin: state.isLogin,
+    //     user: state.user,
+    //     group: [...state.chats, action.data],
+    //   };
+    // }
     return defaultContext;
   };
 
@@ -54,10 +67,10 @@ const ContextProvider = ({ children }) => {
     if (localStorage.getItem("user")) {
       loginHandler(true, JSON.parse(localStorage.getItem("user")));
     }
-    if (localStorage.getItem("offline")) {
-      chatHandler(JSON.parse(localStorage.getItem("offline")));
+    if (localStorage.getItem("group")) {
+      groupHandler(JSON.parse(localStorage.getItem("group")));
     }
-    setInterval(getChats, 1000);
+    getGroup();
   }, []);
 
   const [contextState, dispatchContext] = useReducer(
@@ -65,7 +78,7 @@ const ContextProvider = ({ children }) => {
     defaultContext
   );
 
-  const getChats = async () => {
+  const getGroup = async () => {
     try {
       let user = JSON.parse(localStorage.getItem("user"));
       const config = {
@@ -73,17 +86,9 @@ const ContextProvider = ({ children }) => {
           Authorization: `Bearer ${user.jwt}`,
         },
       };
-      const { data } = await axios.get("/api/chat", config);
-      if (data.length > 0) {
-        chatHandler(data);
-        let newIndex = 0;
-        if (data.length > 15) newIndex = data.length - 15;
-        let newMsg = [];
-        for (let i = newIndex; i < data.length; i++) {
-          newMsg.push(data[i]);
-        }
-        localStorage.setItem("offline", JSON.stringify(newMsg));
-      }
+      const { data } = await axios.get("/api/group", config);
+      localStorage.setItem("group", JSON.stringify(data));
+      groupHandler(data, false);
     } catch (e) {
       console.log(e);
     }
@@ -98,13 +103,17 @@ const ContextProvider = ({ children }) => {
     }
   };
 
-  // console.log([].length);
-
-  const chatHandler = (data) => {
-    if (data.length) {
-      dispatchContext({ type: "addChats", data });
+  const groupHandler = async (data, single) => {
+    if (single) {
+      getGroup();
     } else {
-      dispatchContext({ type: "addSingleChat", data });
+      dispatchContext({ type: "setGroup", data });
+    }
+  };
+
+  const activeGroupHandler = (group) => {
+    if (group) {
+      dispatchContext({ type: "activeGroup", data: group });
     }
   };
 
@@ -112,8 +121,10 @@ const ContextProvider = ({ children }) => {
     isLogin: contextState.isLogin,
     setLogin: loginHandler,
     user: contextState.user,
-    chats: contextState.chats,
-    setChats: chatHandler,
+    group: contextState.group,
+    setGroup: groupHandler,
+    activeGroup: contextState.activeGroup,
+    setActiveGroup: activeGroupHandler,
   };
 
   return <ChatContext.Provider value={cxt}>{children}</ChatContext.Provider>;

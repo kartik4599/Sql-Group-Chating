@@ -10,3 +10,7 @@
 ::-webkit-scrollbar {
   width: 0px;
 }
+
+#blur{
+  backdrop-filter: blur(4px);
+}
