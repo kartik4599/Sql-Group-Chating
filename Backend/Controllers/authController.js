@@ -75,10 +75,25 @@ exports.searchUser = async (req, res) => {
     console.log(search);
     const resultUser = await User.findAll({
       where: {
-        name: {
-          [Op.like]: `%${search}%`,
-        },
+        [Op.or]: [
+          {
+            name: {
+              [Op.like]: `%${search}%`,
+            },
+          },
+          {
+            email: {
+              [Op.like]: `%${search}%`,
+            },
+          },
+          {
+            phoneNo: {
+              [Op.like]: `%${search}%`,
+            },
+          },
+        ],
       },
+      attribute: ["id", "name", "email", "phoneNo"],
     });
 
     res.json({ resultUser });

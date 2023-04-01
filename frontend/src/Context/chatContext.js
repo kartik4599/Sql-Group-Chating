@@ -53,13 +53,14 @@ const ContextProvider = ({ children }) => {
         activeGroup: action.data,
       };
     }
-    // if (action.type === "addSingleChat") {
-    //   return {
-    //     isLogin: state.isLogin,
-    //     user: state.user,
-    //     group: [...state.chats, action.data],
-    //   };
-    // }
+    if (action.type === "removeActiveGroup") {
+      return {
+        isLogin: state.isLogin,
+        user: state.user,
+        group: state.group,
+        activeGroup: null,
+      };
+    }
     return defaultContext;
   };
 
@@ -100,6 +101,7 @@ const ContextProvider = ({ children }) => {
     } else {
       dispatchContext({ type: "setLogout" });
       localStorage.removeItem("user");
+      localStorage.removeItem("group");
     }
   };
 
@@ -114,6 +116,8 @@ const ContextProvider = ({ children }) => {
   const activeGroupHandler = (group) => {
     if (group) {
       dispatchContext({ type: "activeGroup", data: group });
+    } else {
+      dispatchContext({ type: "removeActiveGroup" });
     }
   };
 

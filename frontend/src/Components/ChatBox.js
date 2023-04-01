@@ -1,12 +1,15 @@
-import { Box } from "@chakra-ui/react";
+import { Box, IconButton, Text } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { ChatContext } from "../Context/chatContext";
 import SingleChat from "./SingleChat";
 import ScrollableFeed from "react-scrollable-feed";
 import axios from "axios";
+import { ArrowBackIcon, ArrowLeftIcon, SettingsIcon } from "@chakra-ui/icons";
+import GroupModal from "./GroupModal";
+import SettingModal from "./SettingModal";
 
 const ChatBox = () => {
-  const { activeGroup, user } = useContext(ChatContext);
+  const { activeGroup, user, setActiveGroup } = useContext(ChatContext);
   const [chats, setChats] = useState([]);
 
   const interval = useRef();
@@ -38,40 +41,65 @@ const ChatBox = () => {
       for (let i = newIndex; i < data.length; i++) {
         newMsg.push(data[i]);
       }
-      console.log(newMsg);
       localStorage.setItem(activeGroup.id, JSON.stringify(newMsg));
     }
   };
 
   return (
-    <Box
-      display={"flex"}
-      flexDir="column"
-      p={5}
-      mt={3}
-      bgColor={"whiteAlpha.500"}
-      id="blur"
-      w="100%"
-      borderRadius={"xl"}
-      overflowY="scroll"
-      h={"100%"}>
+    <>
+      <Box
+        bgColor={"whiteAlpha.500"}
+        display="flex"
+        w="100%"
+        h="50px"
+        borderRadius={"lg"}
+        justifyContent={"space-between"}>
+        <Box display={"flex"} alignItems="center">
+          <IconButton
+            onClick={() => {
+              setActiveGroup(null);
+            }}>
+            <ArrowLeftIcon />
+          </IconButton>
+          <Text px={2} fontFamily="Ubuntu" fontSize={"20px"} fontWeight="bold">
+            {activeGroup.name}
+          </Text>
+        </Box>
+        <SettingModal>
+          <IconButton>
+            <SettingsIcon />
+          </IconButton>
+        </SettingModal>
+      </Box>
       <Box
         display={"flex"}
         flexDir="column"
-        justifyContent="flex-end"
+        p={5}
+        mt={3}
+        bgColor={"whiteAlpha.500"}
+        id="blur"
+        w="100%"
+        borderRadius={"xl"}
         overflowY="scroll"
         h={"100%"}>
-        {chats.length > 10 ? (
-          <ScrollableFeed>
-            {chats.map((e) => (
-              <SingleChat key={e.id} {...e} />
-            ))}
-          </ScrollableFeed>
-        ) : (
-          chats.map((e) => <SingleChat key={e.id} {...e} />)
-        )}
+        <Box
+          display={"flex"}
+          flexDir="column"
+          justifyContent="flex-end"
+          overflowY="scroll"
+          h={"100%"}>
+          {chats.length > 10 ? (
+            <ScrollableFeed>
+              {chats.map((e) => (
+                <SingleChat key={e.id} {...e} />
+              ))}
+            </ScrollableFeed>
+          ) : (
+            chats.map((e) => <SingleChat key={e.id} {...e} />)
+          )}
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

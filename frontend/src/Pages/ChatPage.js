@@ -20,7 +20,7 @@ import bird from "../assets/bird.svg";
 const ChatPage = () => {
   const [msg, setMsg] = useState("");
   const toast = useToast();
-  const { user, setChats, activeGroup } = useContext(ChatContext);
+  const { user,  activeGroup } = useContext(ChatContext);
 
   const sendHandler = async () => {
     try {

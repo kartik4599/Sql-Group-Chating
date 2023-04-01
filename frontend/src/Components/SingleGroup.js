@@ -9,6 +9,8 @@ const SingleGroup = (props) => {
     <Box
       w={"100%"}
       p={2}
+      _hover={{ background: "#72c368", color: "white" }}
+      cursor="pointer"
       bgColor="whiteAlpha.600"
       display={"flex"}
       my={2}

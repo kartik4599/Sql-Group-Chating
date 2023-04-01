@@ -12,10 +12,16 @@ const Group = DataBase.define("group", {
     type: sequelize.STRING,
     allowNull: false,
   },
-  // admin: {
-  //   type: sequelize.INTEGER,
-  //   allowNull: false,
-  // },
+  admin: {
+    type: sequelize.STRING,
+    allowNull: false,
+    get: function () {
+      return JSON.parse(this.getDataValue("admin"));
+    },
+    set: function (val) {
+      return this.setDataValue("admin", JSON.stringify(val));
+    },
+  },
 });
 
 module.exports = Group;

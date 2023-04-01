@@ -84,7 +84,7 @@ const SignupComponent = () => {
       <FormControl id="ph" isRequired>
         <FormLabel>Phone No</FormLabel>
         <Input
-          type="tel"
+          type="number"
           placeContent={"Enter Your Phone No"}
           bgColor={"blackAlpha.500"}
           color="white"

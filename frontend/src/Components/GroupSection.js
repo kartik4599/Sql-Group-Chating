@@ -29,7 +29,10 @@ const GroupSection = () => {
         borderRadius={"xl"}
         overflowY="scroll"
         h={"95%"}>
-        {group && group.map((e) => <SingleGroup key={e.id} {...e} />)}
+        {group &&
+          group.map((e) => {
+            return <SingleGroup key={e.id} {...e} />;
+          })}
       </Box>
     </Box>
   );
