@@ -7,8 +7,22 @@ exports.postChat = async (req, res) => {
     const { content, groupId } = req.body;
 
     let chat = await Chat.create({ content, userId: req.user.id, groupId });
+
+    chat = JSON.parse(JSON.stringify(chat));
+
+    chat["user"] = { name: req.user.name };
+
+    const group = await Group.findByPk(chat.groupId, {
+      include: {
+        model: User,
+        attributes: ["name"],
+        attributes: ["id"],
+      },
+      attributes: [],
+    });
+
     if (chat) {
-      res.status(200).json({ msg: "Success", chat });
+      res.status(200).json({ msg: "Success", chat, group });
     }
   } catch (e) {
     console.log(e);

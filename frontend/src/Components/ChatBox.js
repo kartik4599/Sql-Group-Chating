@@ -7,24 +7,29 @@ import axios from "axios";
 import { ArrowBackIcon, ArrowLeftIcon, SettingsIcon } from "@chakra-ui/icons";
 import GroupModal from "./GroupModal";
 import SettingModal from "./SettingModal";
+import io from "socket.io-client";
 
-const ChatBox = () => {
+// const ENDPOINT = "http://localhost:5000/";
+// let socket;
+
+const ChatBox = ({ recivedMsg }) => {
   const { activeGroup, user, setActiveGroup } = useContext(ChatContext);
   const [chats, setChats] = useState([]);
 
-  const interval = useRef();
-
+  // const interval = useRef();
   useEffect(() => {
     if (localStorage.getItem(activeGroup.id)) {
       setChats(JSON.parse(localStorage.getItem(activeGroup.id)));
     }
-    interval.current = setInterval(getLiveChat, 1000);
-
-    return () => {
-      clearInterval(interval.current);
-    };
-    // getLiveChat();
+    getLiveChat();
   }, [activeGroup]);
+
+  useEffect(() => {
+    if (recivedMsg) {
+      console.log(recivedMsg);
+      setChats([...chats, recivedMsg]);
+    }
+  }, [recivedMsg]);
 
   const getLiveChat = async () => {
     const config = {
@@ -32,6 +37,7 @@ const ChatBox = () => {
         Authorization: `Bearer ${user.jwt}`,
       },
     };
+
     const { data } = await axios.get(`/api/chat/${activeGroup.id}`, config);
     setChats(data);
     if (data.length > 0) {

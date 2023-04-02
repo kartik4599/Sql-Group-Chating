@@ -10,17 +10,39 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { ArrowRightIcon } from "@chakra-ui/icons";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ChatBox from "../Components/ChatBox";
 import axios from "axios";
 import { ChatContext } from "../Context/chatContext";
 import GroupSection from "../Components/GroupSection";
 import bird from "../assets/bird.svg";
+import io from "socket.io-client";
+
+const ENDPOINT = "http://localhost:5000/";
+let socket;
 
 const ChatPage = () => {
   const [msg, setMsg] = useState("");
+  const [newMsg, setNewMsg] = useState(null);
   const toast = useToast();
-  const { user,  activeGroup } = useContext(ChatContext);
+  const { user, activeGroup } = useContext(ChatContext);
+
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", user);
+  }, []);
+
+  useEffect(() => {
+    socket.emit("join group", activeGroup);
+  }, [activeGroup]);
+
+  useEffect(() => {
+    socket.on("msg recived", (newMsg) => {
+      setNewMsg(newMsg.chat);
+      console.log(newMsg.chat);
+      // console.log(chats);
+    });
+  });
 
   const sendHandler = async () => {
     try {
@@ -38,7 +60,9 @@ const ChatPage = () => {
           },
           config
         );
+        socket.emit("new Msg", data);
         console.log(data);
+        setMsg("");
       } else {
         toast({
           status: "warning",
@@ -87,7 +111,7 @@ const ChatPage = () => {
           style={{ width: "90%", height: "90%" }}>
           {activeGroup ? (
             <>
-              <ChatBox />
+              <ChatBox recivedMsg={newMsg} />
               <FormControl
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -100,6 +124,7 @@ const ChatPage = () => {
                   justifyContent="center"
                   p={2}>
                   <Input
+                    value={msg}
                     onChange={(e) => {
                       setMsg(e.target.value);
                     }}

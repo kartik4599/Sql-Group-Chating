@@ -8,6 +8,8 @@ const Chat = require("./Model/chatModel");
 const Group = require("./Model/groupModel");
 const groupRouters = require("./Routes/groupRoutes");
 const Group_User = require("./Model/Group_User");
+const io = require("socket.io");
+
 require("colors");
 const app = express();
 
@@ -38,7 +40,40 @@ Chat.belongsTo(Group);
 
 const runServer = async () => {
   const db = await DataBase.sync();
-  app.listen(5000);
+  const server = app.listen(5000);
+
+  const socket = io(server, {
+    pingTimeout: 6000,
+    cors: {
+      origin: "http://localhost:3000",
+    },
+  });
+
+  socket.on("connection", (stream) => {
+    console.log("connected to socekt io");
+
+    stream.on("setup", (user) => {
+      stream.join(user.id);
+    });
+
+    stream.on("join group", (group) => {
+      if (group) {
+        stream.join(group.id);
+        console.log(group);
+      }
+    });
+
+    stream.on("new Msg", (newMsgRecived) => {
+      newMsgRecived.group.users.forEach((user) => {
+        // if (user.id === newMsgRecived.chat.userId) return;
+        stream.in(user.id).emit("msg recived", newMsgRecived);
+      });
+    });
+
+    stream.off("setup", (user) => {
+      stream.leave(user.id);
+    });
+  });
 };
 
 runServer();
