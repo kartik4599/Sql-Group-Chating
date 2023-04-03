@@ -6,7 +6,23 @@ exports.postChat = async (req, res) => {
   try {
     const { content, groupId } = req.body;
 
-    let chat = await Chat.create({ content, userId: req.user.id, groupId });
+    let chat;
+
+    if (req.body.isImage) {
+      chat = await Chat.create({
+        content,
+        userId: req.user.id,
+        groupId,
+        isImage: true,
+      });
+    } else {
+      chat = await Chat.create({
+        content,
+        userId: req.user.id,
+        groupId,
+        isImage: false,
+      });
+    }
 
     chat = JSON.parse(JSON.stringify(chat));
 

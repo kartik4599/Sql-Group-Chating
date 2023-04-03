@@ -12,6 +12,9 @@ const Chat = DataBase.define("chat", {
     type: sequelize.STRING,
     allowNull: false,
   },
+  isImage: {
+    type: sequelize.BOOLEAN,
+  },
 });
 
 module.exports = Chat;

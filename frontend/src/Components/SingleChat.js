@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
-import { Avatar, Box, Text, Tooltip } from "@chakra-ui/react";
+import { Avatar, Box, Image, Text, Tooltip } from "@chakra-ui/react";
 import { ChatContext } from "../Context/chatContext";
-const SingleChat = ({ content, user, userId }) => {
+const SingleChat = ({ content, user, userId, isImage }) => {
   const cxt = useContext(ChatContext);
-
   return (
     <Box
       display={"flex"}
@@ -15,21 +14,27 @@ const SingleChat = ({ content, user, userId }) => {
           <Avatar size={"sm"} name={user.name}></Avatar>
         </Tooltip>
       )}
-      <Box
-        bgColor={"yellow.300"}
-        w={"fit-content"}
-        my={2}
-        px={4}
-        mx={1}
-        py={1}
-        borderRadius="lg">
-        <Text
-          fontFamily={"Delicious Handrawn"}
-          fontSize="18px"
-          fontWeight={"medium"}>
-          {content}
-        </Text>
-      </Box>
+      {isImage ? (
+        <Box bgColor={"whiteAlpha.400"} borderRadius={"lg"} my={1}>
+          <Image src={content} w="150px" fit="contain" />
+        </Box>
+      ) : (
+        <Box
+          bgColor={"yellow.300"}
+          w={"fit-content"}
+          my={2}
+          px={4}
+          mx={1}
+          py={1}
+          borderRadius="lg">
+          <Text
+            fontFamily={"Delicious Handrawn"}
+            fontSize="18px"
+            fontWeight={"medium"}>
+            {content}
+          </Text>
+        </Box>
+      )}
     </Box>
   );
 };

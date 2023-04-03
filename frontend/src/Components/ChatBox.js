@@ -9,14 +9,10 @@ import GroupModal from "./GroupModal";
 import SettingModal from "./SettingModal";
 import io from "socket.io-client";
 
-// const ENDPOINT = "http://localhost:5000/";
-// let socket;
-
 const ChatBox = ({ recivedMsg }) => {
   const { activeGroup, user, setActiveGroup } = useContext(ChatContext);
   const [chats, setChats] = useState([]);
 
-  // const interval = useRef();
   useEffect(() => {
     if (localStorage.getItem(activeGroup.id)) {
       setChats(JSON.parse(localStorage.getItem(activeGroup.id)));
