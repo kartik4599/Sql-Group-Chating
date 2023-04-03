@@ -9,6 +9,8 @@ const Group = require("./Model/groupModel");
 const groupRouters = require("./Routes/groupRoutes");
 const Group_User = require("./Model/Group_User");
 const io = require("socket.io");
+const cron = require("node-cron");
+const ArchiveChat = require("./Model/archiveChat");
 
 require("colors");
 const app = express();
@@ -37,6 +39,28 @@ Group.hasMany(Chat);
 Chat.belongsTo(Group);
 
 // Table Relation
+
+const testing = async () => {
+  let chatResult = await Chat.findAll();
+  chatResult = JSON.parse(JSON.stringify(chatResult));
+
+  passResult = chatResult.map((record) => {
+    return {
+      content: record.content,
+      isImage: record.isImage,
+      userId: record.userId,
+      groupId: record.groupId,
+    };
+  });
+
+  const archiveResult = await ArchiveChat.bulkCreate(passResult);
+
+  await Chat.destroy({ where: {} });
+
+  console.log(archiveResult);
+};
+
+cron.schedule("0 0 * * *", testing);
 
 const runServer = async () => {
   const db = await DataBase.sync();
